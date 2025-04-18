@@ -1,0 +1,164 @@
+const express = require('express');
+const router = express.Router();
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+// Initialize Google Generative AI with API key from environment variables
+let genAI;
+let geminiModel;
+
+try {
+  genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-pro"  });
+  console.log('Google Gemini API initialized successfully');
+} catch (error) {
+  console.error('Error initializing Google Gemini API:', error);
+}
+
+/**
+ * @route   GET /api/ai/test
+ * @desc    Test route to verify API is working
+ * @access  Public
+ */
+router.get('/test', (req, res) => {
+  res.json({ message: 'Gemini AI API is working!' });
+});
+
+/**
+ * @route   POST /api/ai/generate-roadmap
+ * @desc    Generate a career roadmap based on job title
+ * @access  Public
+ */
+router.post('/generate-roadmap', async (req, res) => {
+  try {
+    const { careerGoal } = req.body;
+
+    if (!careerGoal) {
+      return res.status(400).json({ error: 'Career goal is required' });
+    }
+
+    // Check if Gemini is initialized
+    if (!geminiModel) {
+      console.log('Using mock data since Gemini is not initialized');
+      // Return mock data for testing
+      return res.json({
+        "title": `Career Roadmap for ${careerGoal}`,
+        "description": `A comprehensive guide to becoming a ${careerGoal}`,
+        "steps": [
+          {
+            "number": 1,
+            "title": "Foundation Building",
+            "description": "Learn the fundamental concepts and tools required for this career path.",
+            "skills": ["Basic Programming", "Industry Knowledge", "Problem Solving"],
+            "timeframe": "2-3 months"
+          },
+          {
+            "number": 2,
+            "title": "Core Skills Development",
+            "description": "Master the essential technical skills needed for entry-level positions.",
+            "skills": ["Technical Skill 1", "Technical Skill 2", "Communication"],
+            "timeframe": "3-4 months"
+          },
+          {
+            "number": 3,
+            "title": "Specialization",
+            "description": "Focus on specific areas of expertise relevant to your career goals.",
+            "skills": ["Advanced Skill 1", "Advanced Skill 2", "Teamwork"],
+            "timeframe": "2-3 months"
+          },
+          {
+            "number": 4,
+            "title": "Project Building",
+            "description": "Apply your knowledge by building real-world projects for your portfolio.",
+            "skills": ["Project Management", "Problem Solving", "Attention to Detail"],
+            "timeframe": "2-3 months"
+          },
+          {
+            "number": 5,
+            "title": "Professional Development",
+            "description": "Prepare for the job market with interview skills and networking.",
+            "skills": ["Resume Building", "Interview Skills", "Networking"],
+            "timeframe": "1-2 months"
+          },
+          {
+            "number": 6,
+            "title": "Continuous Learning",
+            "description": "Stay updated with the latest trends and technologies in the field.",
+            "skills": ["Research", "Self-Learning", "Adaptability"],
+            "timeframe": "Ongoing"
+          }
+        ]
+      });
+    }
+
+    const prompt = `Create a step-by-step learning roadmap to become a ${careerGoal}. Include 6-8 key stages with brief descriptions for each. For each stage, include:
+    1. A title for the stage
+    2. A brief description of what to learn
+    3. Key skills to acquire
+    4. Estimated time to complete this stage
+    
+    Format the response as a JSON object with the following structure:
+    {
+      "title": "Career Roadmap for [career goal]",
+      "description": "A comprehensive guide to becoming a [career goal]",
+      "steps": [
+        {
+          "number": 1,
+          "title": "Step title",
+          "description": "Step description",
+          "skills": ["Skill 1", "Skill 2", "Skill 3"],
+          "timeframe": "Estimated time"
+        },
+        ...
+      ]
+    }
+    
+    IMPORTANT: Return ONLY the JSON object without any markdown formatting, code blocks, or additional text. Do not wrap the JSON in \`\`\` or any other formatting.`;
+
+    // Set generation configuration
+    const generationConfig = {
+      temperature: 0.7,
+      maxOutputTokens: 2000,
+    };
+
+    // System instructions as part of the prompt
+    const systemPrompt = "You are a career advisor specialized in creating learning roadmaps. Provide detailed, practical roadmaps with clear steps. Always respond with valid JSON without any markdown formatting or code blocks.";
+    const fullPrompt = `${systemPrompt}\n\n${prompt}`;
+
+    // Generate content directly
+    const result = await geminiModel.generateContent({
+      contents: [{ role: "user", parts: [{ text: fullPrompt }] }],
+      generationConfig,
+    });
+
+    // Get the response text
+    const response = result.response;
+    let responseText = response.text();
+
+    // Clean up the response text if it contains markdown formatting
+    // Remove markdown code block indicators (```json and ```)
+    if (responseText.includes('```')) {
+      console.log('Detected markdown in response, cleaning up...');
+      responseText = responseText.replace(/```json\s?/g, '').replace(/```\s?/g, '');
+    }
+
+    // Parse the response to ensure it's valid JSON
+    try {
+      // Trim any whitespace before parsing
+      const cleanedText = responseText.trim();
+      console.log('Attempting to parse JSON...');
+      const roadmapData = JSON.parse(cleanedText);
+      return res.json(roadmapData);
+    } catch (error) {
+      console.error('Error parsing Gemini response:', error);
+      return res.status(500).json({ 
+        error: 'Failed to parse roadmap data',
+        rawResponse: responseText
+      });
+    }
+  } catch (error) {
+    console.error('Error generating roadmap with Gemini:', error);
+    return res.status(500).json({ error: 'Failed to generate roadmap' });
+  }
+});
+
+module.exports = router;

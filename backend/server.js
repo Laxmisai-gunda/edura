@@ -8,6 +8,8 @@ dotenv.config();
 
 // Import routes
 const authRoutes = require('./routes/auth');
+const aiRoutes = require('./routes/ai');
+const pdfRoutes = require('./routes/pdf');
 
 // Initialize express app
 const app = express();
@@ -16,13 +18,19 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/edura')
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Connect to MongoDB (if available)
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));
+} else {
+  console.log('MongoDB connection skipped - running without database');
+}
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/pdf', pdfRoutes);
 
 // Basic route
 app.get('/', (req, res) => {

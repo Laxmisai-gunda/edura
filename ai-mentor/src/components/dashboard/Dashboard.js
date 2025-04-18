@@ -5,7 +5,9 @@ import {
     faComments,
     faLock,
     faRoad,
-    faRobot
+    faRobot,
+    faRoute,
+    faMagic
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useEffect, useState } from 'react';
@@ -60,6 +62,37 @@ const Dashboard = () => {
                     <FontAwesomeIcon icon={faRoad} className="me-2" />
                     Continue Learning
                   </Button>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+      
+      {/* AI Roadmap Generator Promo */}
+      <Row className="mb-4">
+        <Col>
+          <Card className="promo-card">
+            <Card.Body className="p-0">
+              <Row className="g-0">
+                <Col md={8} className="p-4">
+                  <div className="d-flex align-items-center mb-3">
+                    <div className="feature-icon me-3">
+                      <FontAwesomeIcon icon={faMagic} />
+                    </div>
+                    <h3 className="mb-0">AI Career Roadmap Generator</h3>
+                  </div>
+                  <p className="mb-4">
+                    Generate a personalized step-by-step career roadmap based on your desired job title. 
+                    Our AI will create a customized learning path to help you achieve your career goals.
+                  </p>
+                  <Button variant="primary" as={Link} to="/roadmap-generator" className="btn-lg">
+                    <FontAwesomeIcon icon={faRoute} className="me-2" />
+                    Generate Your Roadmap
+                  </Button>
+                </Col>
+                <Col md={4} className="promo-image d-none d-md-block">
+                  {/* This would be a background image set in CSS */}
                 </Col>
               </Row>
             </Card.Body>

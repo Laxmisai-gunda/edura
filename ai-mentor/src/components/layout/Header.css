@@ -22,6 +22,22 @@
   color: #fff;
 }
 
+.navbar-dark .navbar-nav .highlight-link {
+  color: #fff;
+  background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+  border-radius: 20px;
+  padding: 0.5rem 1.2rem;
+  margin-left: 0.5rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.navbar-dark .navbar-nav .highlight-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .dropdown-menu {
   border-radius: 0.5rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);

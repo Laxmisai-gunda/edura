@@ -1,0 +1,170 @@
+.roadmap-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.generate-btn {
+  min-width: 180px;
+}
+
+.roadmap-header {
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: none;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.roadmap-step-card {
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.roadmap-step-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+.roadmap-step-card.completed {
+  background-color: #f8fff8;
+  border-left: 5px solid #28a745;
+}
+
+.step-number-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: #f0f7ff;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.step-number-icon svg {
+  color: #0d6efd;
+  font-size: 1.2rem;
+}
+
+.step-number-icon span {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #0d6efd;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.step-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.step-description {
+  color: #6c757d;
+  font-size: 0.95rem;
+}
+
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.timeframe {
+  font-weight: normal;
+  font-size: 0.85rem;
+}
+
+/* Animation for cards */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.roadmap-result .roadmap-step-card {
+  animation: fadeIn 0.5s ease forwards;
+  animation-delay: calc(0.1s * var(--animation-order, 0));
+  opacity: 0;
+}
+
+/* Set animation order for each card */
+.roadmap-result .col-md-6:nth-child(1) .roadmap-step-card { --animation-order: 1; }
+.roadmap-result .col-md-6:nth-child(2) .roadmap-step-card { --animation-order: 2; }
+.roadmap-result .col-md-6:nth-child(3) .roadmap-step-card { --animation-order: 3; }
+.roadmap-result .col-md-6:nth-child(4) .roadmap-step-card { --animation-order: 4; }
+.roadmap-result .col-md-6:nth-child(5) .roadmap-step-card { --animation-order: 5; }
+.roadmap-result .col-md-6:nth-child(6) .roadmap-step-card { --animation-order: 6; }
+.roadmap-result .col-md-6:nth-child(7) .roadmap-step-card { --animation-order: 7; }
+.roadmap-result .col-md-6:nth-child(8) .roadmap-step-card { --animation-order: 8; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .roadmap-step-card {
+    margin-bottom: 20px;
+  }
+  
+  .step-number-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .step-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* PDF Export Styles */
+@media print {
+  .roadmap-result {
+    background-color: white !important;
+    color: black !important;
+    page-break-inside: avoid;
+  }
+  
+  .roadmap-header {
+    box-shadow: none !important;
+    border: 1px solid #dee2e6 !important;
+    background: white !important;
+  }
+  
+  .roadmap-step-card {
+    box-shadow: none !important;
+    border: 1px solid #dee2e6 !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  
+  .roadmap-step-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  
+  .step-number-icon {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  
+  .badge {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    border: 1px solid #dee2e6 !important;
+  }
+}

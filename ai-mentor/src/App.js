@@ -24,6 +24,7 @@ import Profile from './components/profile/Profile';
 import Resources from './components/resources/Resources';
 import Roadmap from './components/roadmap/Roadmap';
 import RoadmapDetail from './components/roadmap/RoadmapDetail';
+import RoadmapGenerator from './components/roadmap/RoadmapGenerator';
 
 // Context
 import { AuthContext, AuthProvider } from './contexts/AuthContext';
@@ -80,6 +81,11 @@ function AppContent() {
             <Route path="/roadmap" element={
               <ProtectedRoute>
                 <Roadmap />
+              </ProtectedRoute>
+            } />
+            <Route path="/roadmap-generator" element={
+              <ProtectedRoute>
+                <RoadmapGenerator />
               </ProtectedRoute>
             } />
             <Route path="/jobs/:id" element={
